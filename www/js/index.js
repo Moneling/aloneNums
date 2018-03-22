@@ -140,12 +140,6 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-/**
- * @brief 矩阵
- * @details [long description]
- * 
- * @return [description]
- */
 var matrixToolkit = {
 	makeRow: function makeRow() {
 		var r = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
@@ -165,6 +159,13 @@ var matrixToolkit = {
 			return _this.makeRow(c);
 		});
 	},
+
+	/**
+  * @brief [生成一个打乱数据的数组]
+  * @details [long description]
+  * 
+  * @param  [description]
+  */
 	shuffle: function shuffle(array) {
 
 		for (var i = 0; i < array.length - 2; i++) {
@@ -173,7 +174,6 @@ var matrixToolkit = {
 			array[i] = _ref[0];
 			array[j] = _ref[1];
 		}
-
 		return array;
 	},
 
