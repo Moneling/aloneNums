@@ -3,7 +3,7 @@ const Toolkit = require("./toolkit.js");
 class Generator {
     generator() {
         while (!this.internalGenerator()) {
-            console.log('error');
+            console.log('error gener.generator');
         }
 
     }

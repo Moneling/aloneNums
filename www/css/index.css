@@ -58,6 +58,12 @@ body > * {
 .container .row > span:nth-child(3n) {
   border-right-width: 1px;
 }
+.container .row > span.empty {
+  color: white;
+}
+.container .row > span.fill {
+  background: #eee;
+}
 .container .row:last-child > span {
   border-bottom-width: 2px;
 }

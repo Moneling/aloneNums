@@ -48,6 +48,7 @@ const matrixToolkit={
  */
 
 const boxToolkit = {
+	
 	getBoxCells(matrix,boxIndex){
 		const startRowIndex = Math.floor(boxIndex / 3) * 3;	//获取到每一个宫的起始位置
 		const startCollIndex = boxIndex % 3 * 3 ;

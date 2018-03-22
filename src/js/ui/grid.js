@@ -1,13 +1,25 @@
 const Toolkit = require("../core/toolkit.js");
-
+const Generator = require("../core/generator.js");
+const Suduku = require('../core/sudoku.js');
 class Grid {
 	constructor(container) {
 		this._$container = container;
 	}
 	build() {
-		const matrix = Toolkit.matrix.makeMatrix(); //生成数组
+		const gener = new Generator();
+			  gener.generator();
+
+		// const matrix = Toolkit.matrix.makeMatrix(); //生成数组  初次测试
+		// const matrix =gener.matrix; //生成数组
+
+		const suduku = new Suduku();
+		suduku.make(); //生成数组
+		const matrix =suduku.puzzleMatrix; //生成数组
+
 		const $cells = matrix.map(rowVlaues => rowVlaues.map(cellValues => {
-			return $("<span>").text(cellValues)
+			return $("<span>")
+			.addClass(cellValues ?'fill' : 'empty' )
+			.text(cellValues)
 		}));
 		const $divArr = $cells.map($spanArr => {
 			return $("<div>")
