@@ -293,8 +293,28 @@ console.log(gener.matrix);*/
 
 var Grid = __webpack_require__(3);
 var grid = new Grid($("#container"));
+var popupNumber = __webpack_require__(5);
 grid.build();
 grid.layout();
+
+var popup = new popupNumber($("#popupNumbers"));
+grid.bindPopup(popup);
+
+$("#check").on("click", function (e) {
+	grid.reset();
+});
+
+$("#reset").on("click", function (e) {
+	grid.reset();
+});
+$("#clear").on("click", function (e) {
+	grid.clear();
+});
+
+$("#rebuild").on("click", function (e) {
+	console.log('2222');
+	grid.rebuild();
+});
 
 /***/ }),
 /* 3 */
@@ -352,6 +372,40 @@ var Grid = function () {
 				"width": "30px",
 				"line-height": width + "px",
 				"font-size": width < 32 ? width / 2 + "px" : ""
+			});
+		}
+	}, {
+		key: "rebuild",
+		value: function rebuild() {
+			$("#container").empty();
+			this.build();
+			this.layout();
+		}
+		/*重置数独*/
+
+	}, {
+		key: "rest",
+		value: function rest() {}
+		/*检测用户输入*/
+
+	}, {
+		key: "check",
+		value: function check() {}
+		/*清除错误*/
+
+	}, {
+		key: "clear",
+		value: function clear() {}
+	}, {
+		key: "bindPopup",
+		value: function bindPopup(popupNumber) {
+			this._$container.on("click", "span", function (e) {
+				var $cell = $(e.target); //this 指代的是当前定义的环境的this grid	
+				// console.log(e.target.textContent); //获取到点击的值
+				var cellValue = e.target.textContent;
+				// console.log(cellValue);
+				popupNumber.popup($cell);
+				// console.log($cell.position());
 			});
 		}
 	}]);
@@ -414,6 +468,87 @@ module.exports = function () {
  * 去除本分元素
  */
 
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/*
+	点击每一个区块传入一个对象
+	并显示popup dui popop的每一个点击将值赋给传入的对象
+ */
+
+module.exports = function () {
+	function PopupNumbers($panel) {
+		var _this = this;
+
+		_classCallCheck(this, PopupNumbers);
+
+		//获取到这个对象并保存
+		this._panel = $panel.hide().removeClass("hidden"); // 首先隐藏并移除hidden 排除其样式干扰
+
+
+		this._panel.on("click", "span", function (e) {
+			var $cell = _this._targetCell; //获取到点击的cell
+			console.log($cell);
+			var $span = $(e.target);
+			//回填样式
+			if ($span.hasClass("doubtErrorNum")) {
+				if ($cell.hasClass("doubtErrorNum")) {
+					$cell.removeClass("doubtErrorNum");
+				} else {
+					$cell.removeClass("doubtEnsureNum").removeClass("empty").addClass("doubtErrorNum");
+				}
+				return;
+			}
+			if ($span.hasClass("doubtEnsureNum")) {
+				if ($cell.hasClass("doubtEnsureNum")) {
+					$cell.removeClass("doubtEnsureNum");
+				} else {
+					$cell.removeClass("doubtErrorNum").removeClass("empty").addClass("doubtEnsureNum");
+				}
+				return;
+			}
+
+			//取消填写
+			if ($span.hasClass("empty")) {
+				console.log('nnn');
+				$cell.addClass("empty").text("0").removeClass("doubtErrorNum").removeClass("doubtEnsureNum");
+				return;
+			}
+			//填写数字
+			$cell.removeClass("empty").text($span.text());
+		});
+	}
+
+	_createClass(PopupNumbers, [{
+		key: "popup",
+		value: function popup($cell) {
+			this._targetCell = $cell; //
+
+			var _$cell$position = $cell.position(),
+			    left = _$cell$position.left,
+			    top = _$cell$position.top;
+
+			if ($cell.hasClass("fill")) {
+				this._panel.hide();
+				return;
+			}
+			this._panel.css({
+				"left": left + 20 + "px",
+				"top": top + "px"
+			}).show();
+		}
+	}]);
+
+	return PopupNumbers;
+}();
+
 /***/ })
 /******/ ]);
-//# sourceMappingURL=index.js.map

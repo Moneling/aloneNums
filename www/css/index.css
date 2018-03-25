@@ -64,6 +64,12 @@ body > * {
 .container .row > span.fill {
   background: #eee;
 }
+.container .row > span.doubtErrorNum {
+  background: lightpink;
+}
+.container .row > span.doubtEnsureNum {
+  background: lightgreen;
+}
 .container .row:last-child > span {
   border-bottom-width: 2px;
 }
@@ -102,4 +108,63 @@ body > * {
 }
 .dashboard .buttons button:last-child {
   border-right-width: 1px;
+}
+.popup-num {
+  /* font-size: 0px; */
+  padding-left: 0px;
+  position: absolute;
+  padding-left: 5%;
+  /* 继承 */
+}
+.popup-num .row > span {
+  display: inline-block;
+  cursor: pointer;
+  text-align: center;
+  width: 10%;
+  height: 24px;
+  line-height: 24px;
+  border: 1px solid #ccc;
+  background: #fff;
+  border-right-width: 0;
+  border-bottom-width: 0;
+  box-sizing: border-box;
+  /*  &:nth-child(9){
+           	border-right-width: 2px;
+           } */
+  /* &:nth-child(3n+1){
+            	border-left-width: 0px;
+            } */
+}
+.popup-num .row > span:last-child {
+  border-right-width: 2px;
+}
+.popup-num .row > span:first-child {
+  border-left-width: 2px;
+}
+.popup-num .row > span:nth-child(3n) {
+  border-right-width: 1px;
+}
+.popup-num .row > span.empty {
+  color: white;
+}
+.popup-num .row > span.fill {
+  background: #eee;
+}
+.popup-num .row > span.doubtErrorNum {
+  background: lightpink;
+}
+.popup-num .row > span.doubtEnsureNum {
+  background: lightgreen;
+}
+.popup-num .row:last-child > span {
+  border-bottom-width: 2px;
+}
+.popup-num .row:first-child > span {
+  border-top-width: 2px;
+}
+.popup-num .row:nth-child(3n) > span {
+  border-bottom-width: 1px;
+}
+.popup-num > span {
+  font-size: 1rem ;
 }

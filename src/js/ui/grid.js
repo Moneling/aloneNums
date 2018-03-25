@@ -1,6 +1,7 @@
 const Toolkit = require("../core/toolkit.js");
 const Generator = require("../core/generator.js");
 const Suduku = require('../core/sudoku.js');
+const Checker = require('../core/checker.js');
 class Grid {
 	constructor(container) {
 		this._$container = container;
@@ -41,6 +42,33 @@ class Grid {
 				"line-height": `${width}px`,
 				"font-size": width < 32 ? `${width/2}px` : ""
 			})
+	}
+	rebuild(){
+		$("#container").empty();
+		this.build();
+		this.layout();
+	}
+	/*重置数独*/
+	rest(){
+
+	}
+	/*检测用户输入*/
+	check(){
+
+	}
+	/*清除错误*/
+	clear(){
+
+	}
+	bindPopup(popupNumber){
+		this._$container.on("click","span",(e)=>{
+			const $cell = $(e.target);	//this 指代的是当前定义的环境的this grid	
+			// console.log(e.target.textContent); //获取到点击的值
+			const cellValue = e.target.textContent;
+			// console.log(cellValue);
+				popupNumber.popup($cell);
+			// console.log($cell.position());
+		})
 	}
 
 }

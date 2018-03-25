@@ -4,8 +4,8 @@ module.exports ={
 	},
 	output:{
 		filename:"[name].js"
-	},
-	devtool:"source-map",
+	},/*
+	devtool:"source-map",*/
 	resolve:{
 		extensions:[".js"]
 	},

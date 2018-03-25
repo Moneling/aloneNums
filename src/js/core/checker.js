@@ -25,7 +25,7 @@ function checkArray(arr) {
     }
     return newArr;
 }
-const Toolkit = require("./toolkit");
+module.exports = const Toolkit = require("./toolkit");
 
 class Checker{
     constructor(matrix){
