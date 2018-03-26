@@ -293,7 +293,7 @@ console.log(gener.matrix);*/
 
 var Grid = __webpack_require__(3);
 var grid = new Grid($("#container"));
-var popupNumber = __webpack_require__(5);
+var popupNumber = __webpack_require__(6);
 grid.build();
 grid.layout();
 
@@ -301,19 +301,19 @@ var popup = new popupNumber($("#popupNumbers"));
 grid.bindPopup(popup);
 
 $("#check").on("click", function (e) {
-	grid.reset();
+    grid.check();
 });
 
 $("#reset").on("click", function (e) {
-	grid.reset();
+    grid.reset();
 });
 $("#clear").on("click", function (e) {
-	grid.clear();
+    grid.clear();
 });
 
 $("#rebuild").on("click", function (e) {
-	console.log('2222');
-	grid.rebuild();
+    console.log('2222');
+    grid.rebuild();
 });
 
 /***/ }),
@@ -330,87 +330,126 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var Toolkit = __webpack_require__(0);
 var Generator = __webpack_require__(1);
 var Suduku = __webpack_require__(4);
+var Checker = __webpack_require__(5);
 
 var Grid = function () {
-	function Grid(container) {
-		_classCallCheck(this, Grid);
+    function Grid(container) {
+        _classCallCheck(this, Grid);
 
-		this._$container = container;
-	}
+        this._$container = container;
+    }
 
-	_createClass(Grid, [{
-		key: "build",
-		value: function build() {
-			var gener = new Generator();
-			gener.generator();
+    _createClass(Grid, [{
+        key: "build",
+        value: function build() {
+            var gener = new Generator();
+            gener.generator();
 
-			// const matrix = Toolkit.matrix.makeMatrix(); //生成数组  初次测试
-			// const matrix =gener.matrix; //生成数组
+            // const matrix = Toolkit.matrix.makeMatrix(); //生成数组  初次测试
+            // const matrix =gener.matrix; //生成数组
 
-			var suduku = new Suduku();
-			suduku.make(); //生成数组
-			var matrix = suduku.puzzleMatrix; //生成数组
+            var suduku = new Suduku();
+            suduku.make(); //生成数组
+            var matrix = suduku.puzzleMatrix; //生成数组
 
-			var $cells = matrix.map(function (rowVlaues) {
-				return rowVlaues.map(function (cellValues) {
-					return $("<span>").addClass(cellValues ? 'fill' : 'empty').text(cellValues);
-				});
-			});
-			var $divArr = $cells.map(function ($spanArr) {
-				return $("<div>").addClass("row").append($spanArr);
-			});
+            var $cells = matrix.map(function (rowVlaues) {
+                return rowVlaues.map(function (cellValues) {
+                    return $("<span>").addClass(cellValues ? 'fill' : 'empty').text(cellValues);
+                });
+            });
+            var $divArr = $cells.map(function ($spanArr) {
+                return $("<div>").addClass("row").append($spanArr);
+            });
 
-			this._$container.append($divArr);
-		}
-	}, {
-		key: "layout",
-		value: function layout() {
-			var width = $("span:first", this._container).width();
-			console.log(width);
-			$("span", this._container).css({
-				"height": "30px",
-				"width": "30px",
-				"line-height": width + "px",
-				"font-size": width < 32 ? width / 2 + "px" : ""
-			});
-		}
-	}, {
-		key: "rebuild",
-		value: function rebuild() {
-			$("#container").empty();
-			this.build();
-			this.layout();
-		}
-		/*重置数独*/
+            this._$container.append($divArr);
+        }
+    }, {
+        key: "layout",
+        value: function layout() {
+            var width = $("span:first", this._container).width();
+            console.log(width);
+            $("span", this._container).css({
+                "height": "30px",
+                "width": "30px",
+                "line-height": width + "px",
+                "font-size": width < 32 ? width / 2 + "px" : ""
+            });
+        }
+    }, {
+        key: "rebuild",
+        value: function rebuild() {
+            $("#container").empty();
+            this.build();
+            this.layout();
+        }
+        /*重置数独 回复为初始化状态*/
 
-	}, {
-		key: "rest",
-		value: function rest() {}
-		/*检测用户输入*/
+    }, {
+        key: "reset",
+        value: function reset() {
+            this._$container.find("span:not(.fill)").removeClass("error doubtErrorNum doubtEnsureNum").addClass("empty").text(0);
+        }
+        /*检测用户输入*/
 
-	}, {
-		key: "check",
-		value: function check() {}
-		/*清除错误*/
+    }, {
+        key: "check",
+        value: function check() {
+            /**
+             * 1. 获取页面元素内的所有值
+             * 2. 将其转化为一个二维数组
+             * 3. 将得到的数组进行check，如果返回true则填写正确，如果返回false则对错误的数据进行标志
+             */
+            var data = this._$container.children().map(function (rowIndex, div) {
+                return $(div).children().map(function (colIndex, span) {
+                    return parseInt($(span).text()) || 0;
+                });
+            }).toArray().map(function ($span) {
+                return $span.toArray();
+            });
 
-	}, {
-		key: "clear",
-		value: function clear() {}
-	}, {
-		key: "bindPopup",
-		value: function bindPopup(popupNumber) {
-			this._$container.on("click", "span", function (e) {
-				var $cell = $(e.target); //this 指代的是当前定义的环境的this grid	
-				// console.log(e.target.textContent); //获取到点击的值
-				var cellValue = e.target.textContent;
-				// console.log(cellValue);
-				popupNumber.popup($cell);
-				// console.log($cell.position());
-			});
-		}
-	}]);
+            console.log(4444444444444444444);
+            console.log(data);
+            var checker = new Checker(data);
+            if (checker.check()) {
+                // return true;
+                /**
+                 * 3. 将得到的数组进行check，如果返回true则填写正确，如果返回false则对错误的数据进行标志
+                 */
+            }
+            var marks = checker._MatrixMarks;
+            console.log(marks);
+            this._$container.children().each(function (rowIndex, div) {
+                $(div).children().each(function (colIndex, span) {
+                    if ($(span).is(".fill") || marks[rowIndex][colIndex]) {
+                        $(span).removeClass("error");
+                    } else {
+                        $(span).addClass("error");
+                    }
+                });
+            });
+        }
+        /*清除错误*/
 
-	return Grid;
+    }, {
+        key: "clear",
+        value: function clear() {
+            this._$container.find("span.error").removeClass("error").addClass("empty").text(0);
+        }
+    }, {
+        key: "bindPopup",
+        value: function bindPopup(popupNumber) {
+            this._$container.on("click", "span", function (e) {
+                var $cell = $(e.target); //this 指代的是当前定义的环境的this grid	
+                // console.log(e.target.textContent); //获取到点击的值
+                var cellValue = e.target.textContent;
+                // console.log(cellValue);
+                popupNumber.popup($cell);
+                // console.log($cell.position());
+            });
+        }
+    }]);
+
+    return Grid;
 }();
 
 module.exports = Grid;
@@ -434,34 +473,34 @@ var Generator = __webpack_require__(1);
  */
 
 module.exports = function () {
-	function Suduku() {
-		_classCallCheck(this, Suduku);
+    function Suduku() {
+        _classCallCheck(this, Suduku);
 
-		var generator = new Generator();
-		generator.generator();
-		this.solutionMatrix = generator.matrix; // 生成一个完整解决数组
-	}
+        var generator = new Generator();
+        generator.generator();
+        this.solutionMatrix = generator.matrix; // 生成一个完整解决数组
+    }
 
-	_createClass(Suduku, [{
-		key: 'make',
-		value: function make() {
-			var level = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 3;
+    _createClass(Suduku, [{
+        key: 'make',
+        value: function make() {
+            var level = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
 
-			//去除部分数据
-			// const shouldRid = Math.random() * 9 < level ;
-			/*this.puzzleMatrix =this.solutionMatrix.map(row =>row.map(cell =>{
-   	return Math.random() * 9 < level ? 0 : cell;   // is ok this method
-   }))*/
+            //去除部分数据
+            // const shouldRid = Math.random() * 9 < level ;
+            /*this.puzzleMatrix =this.solutionMatrix.map(row =>row.map(cell =>{
+            	return Math.random() * 9 < level ? 0 : cell;   // is ok this method
+            }))*/
 
-			this.puzzleMatrix = this.solutionMatrix.map(function (row) {
-				return row.map(function (cell) {
-					return Math.random() * 9 < level ? 0 : cell;
-				});
-			});
-		}
-	}]);
+            this.puzzleMatrix = this.solutionMatrix.map(function (row) {
+                return row.map(function (cell) {
+                    return Math.random() * 9 < level ? 0 : cell;
+                });
+            });
+        }
+    }]);
 
-	return Suduku;
+    return Suduku;
 }();
 
 /** 
@@ -479,75 +518,219 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+// 检查数独解决方案
+function checkArray(arr) {
+    var arrLen = arr.length; //9
+    var newArr = new Array(arrLen); //[true]
+    newArr.fill(true);
+
+    for (var i = 0; i < arr.length - 1; i++) {
+
+        if (!newArr[i]) {
+            continue;
+        }
+        if (!arr[i]) {
+            newArr[i] = false;
+            continue;
+        }
+
+        for (var j = i + 1; j < arr.length; j++) {
+            if (arr[i] == arr[j]) {
+                newArr[i] = newArr[j] = false;
+                continue;
+            }
+        }
+    }
+    return newArr;
+}
+var Toolkit = __webpack_require__(0);
+module.exports = function () {
+    function Checker(matrix) {
+        _classCallCheck(this, Checker);
+
+        this._matrix = matrix;
+        this._MatrixMarks = Toolkit.matrix.makeMatrix(true); //标记检查变量
+    }
+
+    _createClass(Checker, [{
+        key: "check",
+        value: function check() {
+            this.checkRows();
+            this.checkCols();
+            this.checkBoxes();
+
+            this._success = this._MatrixMarks.every(function (row) {
+                return row.every(function (cell) {
+                    return cell;
+                });
+            }); //对整个数据进行检查  全部返回true =》 true or false
+            return this._success; //全部返回成功则输出
+        }
+    }, {
+        key: "checkRows",
+        value: function checkRows() {
+            for (var rowIndex = 0; rowIndex < 9; rowIndex++) {
+                var rowArr = this._matrix[rowIndex]; //得到一行数组 来源于 this._matrix
+                var marks = checkArray(rowArr); //得到一个检测后的标记数组  将这个数组进行检测如果是false 进行this._matrix 更新
+
+                for (var colIndex = 0; colIndex < marks.length; colIndex++) {
+                    if (!marks[colIndex]) {
+                        this._MatrixMarks[rowIndex][colIndex] = false;
+                    }
+                }
+            }
+        }
+    }, {
+        key: "checkCols",
+        value: function checkCols() {
+            for (var colIndex = 0; colIndex < 9; colIndex++) {
+                var cols = [];
+
+                for (var rowIndex = 0; rowIndex < 9; rowIndex++) {
+                    cols[rowIndex] = this._matrix[rowIndex][colIndex];
+                }
+
+                var marks = checkArray(cols);
+
+                for (var _rowIndex = 0; _rowIndex < marks.length; _rowIndex++) {
+                    if (!marks[_rowIndex]) {
+                        this._MatrixMarks[_rowIndex][colIndex] = false;
+                    }
+                }
+            }
+        }
+    }, {
+        key: "checkBoxes",
+        value: function checkBoxes() {
+            // console.log("进入checkBoxes arrayis");
+            // console.log(this._matrix)
+            for (var boxIndex = 0; boxIndex < 9; boxIndex++) {
+
+                var boxes = Toolkit.box.getBoxCells(this._matrix, boxIndex);
+                var marks = checkArray(boxes);
+
+                for (var celIndex = 0; celIndex < 9; celIndex++) {
+                    if (!marks[boxIndex]) {
+                        var _Toolkit$box$convertF = Toolkit.box.convertFromBoxIndex(boxIndex, celIndex),
+                            rowIndex = _Toolkit$box$convertF.rowIndex,
+                            colIndex = _Toolkit$box$convertF.colIndex;
+
+                        this._MatrixMarks[rowIndex][colIndex] = false;
+                    }
+                }
+            }
+        }
+    }, {
+        key: "matrixMarks",
+        get: function get() {
+            //如果有错误则输出其坐标
+            return this._MatrixMarks;
+        }
+    }, {
+        key: "isSuccess",
+        get: function get() {
+            return this._success; //再次检查
+        }
+    }]);
+
+    return Checker;
+}();
+
+/**
+ * 进行单元测试
+ */
+
+/*const Generator = require("./generator.js");
+const gen = new Generator();
+gen.generator();
+
+const matrix = gen.matrix;
+const checker =new Checker(matrix);
+checker.check();
+console.log(checker.matrixMarks);
+
+
+matrix[1][1] =matrix[2][2]=matrix[3][3] =matrix[4][4] = false;
+const checker2 =new Checker(matrix);
+checker2.check();
+console.log(checker2.matrixMarks);
+*/
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 /*
 	点击每一个区块传入一个对象
 	并显示popup dui popop的每一个点击将值赋给传入的对象
  */
 
 module.exports = function () {
-	function PopupNumbers($panel) {
-		var _this = this;
+    function PopupNumbers($panel) {
+        var _this = this;
 
-		_classCallCheck(this, PopupNumbers);
+        _classCallCheck(this, PopupNumbers);
 
-		//获取到这个对象并保存
-		this._panel = $panel.hide().removeClass("hidden"); // 首先隐藏并移除hidden 排除其样式干扰
+        //获取到这个对象并保存
+        this._panel = $panel.hide().removeClass("hidden"); // 首先隐藏并移除hidden 排除其样式干扰
 
 
-		this._panel.on("click", "span", function (e) {
-			var $cell = _this._targetCell; //获取到点击的cell
-			console.log($cell);
-			var $span = $(e.target);
-			//回填样式
-			if ($span.hasClass("doubtErrorNum")) {
-				if ($cell.hasClass("doubtErrorNum")) {
-					$cell.removeClass("doubtErrorNum");
-				} else {
-					$cell.removeClass("doubtEnsureNum").removeClass("empty").addClass("doubtErrorNum");
-				}
-				return;
-			}
-			if ($span.hasClass("doubtEnsureNum")) {
-				if ($cell.hasClass("doubtEnsureNum")) {
-					$cell.removeClass("doubtEnsureNum");
-				} else {
-					$cell.removeClass("doubtErrorNum").removeClass("empty").addClass("doubtEnsureNum");
-				}
-				return;
-			}
+        this._panel.on("click", "span", function (e) {
+            var $cell = _this._targetCell; //获取到点击的cell
+            console.log($cell);
+            var $span = $(e.target);
+            //回填样式
+            if ($span.hasClass("doubtErrorNum")) {
+                if ($cell.hasClass("doubtErrorNum")) {
+                    $cell.removeClass("doubtErrorNum");
+                } else {
+                    $cell.removeClass("doubtEnsureNum").removeClass("empty").addClass("doubtErrorNum");
+                }
+            } else if ($span.hasClass("doubtEnsureNum")) {
+                if ($cell.hasClass("doubtEnsureNum")) {
+                    $cell.removeClass("doubtEnsureNum");
+                } else {
+                    $cell.removeClass("doubtErrorNum").removeClass("empty").addClass("doubtEnsureNum");
+                }
+            } else if ($span.hasClass("empty")) {
+                console.log('nnn');
+                $cell.addClass("empty").text("0").removeClass("doubtErrorNum").removeClass("doubtEnsureNum");
+            } else {
+                //填写数字
+                $cell.removeClass("empty").text($span.text());
+            }
+            $panel.hide();
+        });
+    }
 
-			//取消填写
-			if ($span.hasClass("empty")) {
-				console.log('nnn');
-				$cell.addClass("empty").text("0").removeClass("doubtErrorNum").removeClass("doubtEnsureNum");
-				return;
-			}
-			//填写数字
-			$cell.removeClass("empty").text($span.text());
-		});
-	}
+    _createClass(PopupNumbers, [{
+        key: "popup",
+        value: function popup($cell) {
+            this._targetCell = $cell; //
 
-	_createClass(PopupNumbers, [{
-		key: "popup",
-		value: function popup($cell) {
-			this._targetCell = $cell; //
+            var _$cell$position = $cell.position(),
+                left = _$cell$position.left,
+                top = _$cell$position.top;
 
-			var _$cell$position = $cell.position(),
-			    left = _$cell$position.left,
-			    top = _$cell$position.top;
+            if ($cell.hasClass("fill")) {
+                this._panel.hide();
+                return;
+            }
+            this._panel.css({
+                "left": left + 20 + "px",
+                "top": top + "px"
+            }).show();
+        }
+    }]);
 
-			if ($cell.hasClass("fill")) {
-				this._panel.hide();
-				return;
-			}
-			this._panel.css({
-				"left": left + 20 + "px",
-				"top": top + "px"
-			}).show();
-		}
-	}]);
-
-	return PopupNumbers;
+    return PopupNumbers;
 }();
 
 /***/ })

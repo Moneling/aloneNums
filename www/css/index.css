@@ -29,8 +29,10 @@ body > * {
 }
 .container {
   padding-left: 5%;
+  font-size: 0px;
 }
 .container .row > span {
+  font-size: 1rem;
   display: inline-block;
   cursor: pointer;
   text-align: center;
@@ -64,11 +66,17 @@ body > * {
 .container .row > span.fill {
   background: #eee;
 }
+.container .row > span.error {
+  background: lightcoral;
+}
+.container .row > span.error.empty {
+  color: lightcoral;
+}
 .container .row > span.doubtErrorNum {
   background: lightpink;
 }
 .container .row > span.doubtEnsureNum {
-  background: lightgreen;
+  background: #04e474;
 }
 .container .row:last-child > span {
   border-bottom-width: 2px;
@@ -110,13 +118,14 @@ body > * {
   border-right-width: 1px;
 }
 .popup-num {
-  /* font-size: 0px; */
   padding-left: 0px;
   position: absolute;
   padding-left: 5%;
+  font-size: 0px;
   /* 继承 */
 }
 .popup-num .row > span {
+  font-size: 1rem;
   display: inline-block;
   cursor: pointer;
   text-align: center;
@@ -150,11 +159,17 @@ body > * {
 .popup-num .row > span.fill {
   background: #eee;
 }
+.popup-num .row > span.error {
+  background: lightcoral;
+}
+.popup-num .row > span.error.empty {
+  color: lightcoral;
+}
 .popup-num .row > span.doubtErrorNum {
   background: lightpink;
 }
 .popup-num .row > span.doubtEnsureNum {
-  background: lightgreen;
+  background: #04e474;
 }
 .popup-num .row:last-child > span {
   border-bottom-width: 2px;
@@ -164,7 +179,4 @@ body > * {
 }
 .popup-num .row:nth-child(3n) > span {
   border-bottom-width: 1px;
-}
-.popup-num > span {
-  font-size: 1rem ;
 }

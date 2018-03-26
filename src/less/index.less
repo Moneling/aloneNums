@@ -31,8 +31,10 @@ body {
 }
 .container {
     padding-left: 5%;
+    font-size: 0px;
     .row {
         >span {
+            font-size: 1rem;
             display: inline-block;
             cursor: pointer;
             text-align: center;
@@ -59,11 +61,17 @@ body {
             &.fill{
                 background:#eee;
             }
+            &.error{
+                background: lightcoral;
+                &.empty{
+                    color: lightcoral;
+                }
+            }
             &.doubtErrorNum{
                 background:lightpink;
             }
             &.doubtEnsureNum{
-                background:lightgreen;
+                background:rgb(4, 228, 116);
             }
            /*  &:nth-child(9){
            	border-right-width: 2px;
@@ -124,13 +132,9 @@ body {
 
 @popupCellSize:40px;
 .popup-num{
-    /* font-size: 0px; */
     padding-left: 0px;
     position: absolute;
    .container(); /* 继承 */
-   >span
-       {
-        font-size:1rem ;
-       }
+   
     
 }
